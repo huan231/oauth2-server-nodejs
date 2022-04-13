@@ -1,0 +1,21 @@
+name: Deploy to Heroku
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: heroku container:login
+      - run: heroku container:push web --app=oauth2-server-nodejs --recursive --context-path .
+      - run: heroku container:release web --app=oauth2-server-nodejs

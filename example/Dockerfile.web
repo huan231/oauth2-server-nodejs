@@ -1,0 +1,31 @@
+FROM node:16.15-alpine AS base
+
+FROM base as builder
+
+WORKDIR /usr/src/app
+
+COPY package.json ./
+COPY . ./
+
+RUN npm install --ignore-scripts
+RUN npm run build
+
+FROM base
+
+WORKDIR /usr/src/app
+
+COPY --from=builder /usr/src/app/dist ./dist
+
+COPY package.json ./
+COPY example/package*.json ./example/
+COPY example/src ./example/src
+
+RUN npm install --ignore-scripts --production --package-lock=false
+
+WORKDIR /usr/src/app/example
+
+RUN npm ci --production
+
+EXPOSE 8080
+
+ENTRYPOINT ["npm", "run", "start"]

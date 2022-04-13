@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <title>Authorize | oauth2-server-nodejs</title>
+</head>
+<body>
+<h3>Authorize <%= clientId %></h3>
+<form autocomplete="off" method="post">
+  <% if (scopes.length) { %>
+    <p>The client asks for access with these scopes:</p>
+    <ul>
+      <% scopes.forEach((scope) => { %>
+        <li><%= scope %></li>
+      <% }); %>
+    </ul>
+  <% } %>
+
+  <button type="submit" name="authorize" value="1">Authorize</button>
+  <button type="submit">Cancel</button>
+</form>
+</body>
+</html>
