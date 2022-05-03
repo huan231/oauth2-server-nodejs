@@ -1,6 +1,6 @@
 {
   "name": "oauth2-server-nodejs",
-  "private": true,
+  "version": "0.1.0",
   "description": "OAuth 2.0 Authorization Server implementation for Node.js",
   "homepage": "https://github.com/huan231/oauth2-server-nodejs#readme",
   "bugs": "https://github.com/huan231/oauth2-server-nodejs/issues",
