@@ -1,11 +1,13 @@
 import { JsonWebKey, KeyObject } from 'crypto';
 import { TextEncoder, promisify } from 'util';
+import { Buffer } from 'buffer';
 
 import { base64url } from './buffer';
 
-const { createPrivateKey, sign: signSync } = await import('crypto');
+const { createPrivateKey, sign: signSync, verify: verifySync } = await import('crypto');
 
 const sign = promisify(signSync);
+const verify = promisify(verifySync);
 
 type Algorithm = 'EdDSA' | 'RS256';
 
@@ -31,9 +33,10 @@ interface JWSPayload {
 
 interface JWS {
   sign: (protectedHeader: JWSProtectedHeader, payload: JWSPayload, key: KeyObject) => Promise<string>;
+  verify: (jws: string, key: KeyObject) => Promise<boolean>;
 }
 
-const jws: JWS = {
+export const jws: JWS = {
   sign: async (protectedHeader, payload, key) => {
     const compactProtectedHeader = base64url(JSON.stringify(protectedHeader));
     const compactPayload = base64url(JSON.stringify(payload));
@@ -45,6 +48,17 @@ const jws: JWS = {
     const compactSignature = signature.toString('base64url');
 
     return `${compactProtectedHeader}.${compactPayload}.${compactSignature}`;
+  },
+  verify: (jws, key) => {
+    const [compactProtectedHeader, compactPayload, compactSignature] = jws.split('.');
+
+    const protectedHeader = JSON.parse(Buffer.from(compactProtectedHeader, 'base64url').toString());
+
+    const data = encoder.encode(`${compactProtectedHeader}.${compactPayload}`);
+
+    const signature = Buffer.from(compactSignature, 'base64url');
+
+    return verify(digest(protectedHeader.alg), data, key, signature);
   },
 };
 
@@ -87,4 +101,32 @@ export const makeJWT = ({ jwk }: { jwk: JsonWebKey }): JWT => {
   };
 
   return { sign };
+};
+
+export type ExportJWK = (jwk: JsonWebKey) => JsonWebKey;
+
+export const exportJWK: ExportJWK = (jwk) => {
+  const key: JsonWebKey = {
+    // https://datatracker.ietf.org/doc/html/rfc7517#section-4
+    'kty': jwk.kty,
+    'use': jwk.use,
+    'key_ops': jwk.key_ops,
+    'alg': jwk.alg,
+    'kid': jwk.kid,
+    'x5u': jwk.x5u,
+    'x5c': jwk.x5c,
+    'x5t': jwk.x5t,
+    'x5t#S256': jwk['x5t#S256'],
+
+    // https://datatracker.ietf.org/doc/html/rfc7518#section-6.2.1
+    'crv': jwk.crv,
+    'x': jwk.x,
+    'y': jwk.y,
+
+    // https://datatracker.ietf.org/doc/html/rfc7518#section-6.3.1
+    'e': jwk.e,
+    'n': jwk.n,
+  };
+
+  return JSON.parse(JSON.stringify(key));
 };

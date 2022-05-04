@@ -4,7 +4,7 @@ import request from 'supertest';
 import { makeApp } from './test-utils';
 
 t.test('cross-origin resource sharing', (t) => {
-  t.plan(2);
+  t.plan(3);
 
   const app = makeApp();
 
@@ -25,6 +25,17 @@ t.test('cross-origin resource sharing', (t) => {
     t.plan(3);
 
     const res = await request(app).options('/.well-known/oauth-authorization-server');
+
+    t.equal(res.statusCode, 204);
+
+    t.equal(res.headers['access-control-allow-origin'], '*');
+    t.equal(res.headers['access-control-allow-methods'], 'GET');
+  });
+
+  t.test('jwks request preflight', async (t) => {
+    t.plan(3);
+
+    const res = await request(app).options('/jwks.json');
 
     t.equal(res.statusCode, 204);
 
