@@ -67,7 +67,8 @@ app.post('/authorize', async (req, res, next) => {
   }
 });
 
-const ISSUER = process.env.ISSUER || 'https://as.example.com';
+const PORT = process.env.PORT || 8080;
+const ISSUER = process.env.ISSUER || `http://localhost:${PORT}`;
 
 app.use(
   oAuth2ServerMiddleware({
@@ -139,8 +140,6 @@ app.use((err, req, res, next) => {
     next(err);
   }
 });
-
-const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`app listening on port ${PORT}`);
