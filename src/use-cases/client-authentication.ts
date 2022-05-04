@@ -28,6 +28,12 @@ export const makeHandleClientAuthentication = ({ clientStorage }: { clientStorag
       return null;
     }
 
+    // The client identifier is encoded using the
+    // "application/x-www-form-urlencoded" encoding algorithm
+    // [...], and the encoded value is used as the username; the client
+    // password is encoded using the same algorithm and used as the password.
+    //
+    // https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1
     const [clientId, clientSecret] = Buffer.from(req.headers.authorization.substring(BA_PREFIX.length), 'base64')
       .toString()
       .split(':');

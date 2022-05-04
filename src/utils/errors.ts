@@ -75,6 +75,13 @@ export const makeErrorHandler = ({ issuer }: { issuer: string }) => {
 
     const error = err instanceof OAuth2ServerError ? err : new ServerError();
 
+    // If the client attempted to authenticate via the "Authorization"
+    // request header field, the authorization server MUST
+    // respond with an HTTP 401 (Unauthorized) status code and
+    // include the "WWW-Authenticate" response header field
+    // matching the authentication scheme used by the client.
+    //
+    // https://datatracker.ietf.org/doc/html/rfc6749#section-5.2
     if (error.statusCode === 401 && req.header('authorization') !== undefined) {
       res.setHeader(
         'WWW-Authenticate',

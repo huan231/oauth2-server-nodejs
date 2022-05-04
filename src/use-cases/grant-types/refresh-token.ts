@@ -47,6 +47,12 @@ export const makeHandleRefreshTokenGrant = ({
       throw new InvalidGrant('the provided refresh token is invalid, expired or revoked');
     }
 
+    // The requested scope MUST NOT include any scope
+    // not originally granted by the resource owner, and if omitted is
+    // treated as equal to the scope originally granted by the
+    // resource owner.
+    //
+    // https://datatracker.ietf.org/doc/html/rfc6749#section-6
     if (req.body.scope) {
       assertAccessTokenScope(refreshToken, req.body.scope);
     }

@@ -39,6 +39,11 @@ export const makeHandleAuthorizationCodeGrant = ({
       throw new InvalidGrant('the provided authorization code is invalid, expired or revoked');
     }
 
+    // The authorization server MUST ensure that the "redirect_uri" parameter is present if the
+    // "redirect_uri" parameter was included in the initial authorization
+    // request [...], and if included ensure that their values are identical.
+    //
+    // https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
     if (authorizationCode.redirectUri !== req.body.redirectUri) {
       throw new InvalidRequest('the request includes an invalid value for parameter "redirect_uri"');
     }
