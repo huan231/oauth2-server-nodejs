@@ -18,6 +18,9 @@ export const makeHandleClientCredentialsGrant = ({
   assertAccessTokenScope: AssertAccessTokenScope;
 }) => {
   const handleClientCredentialsGrant: HandleClientCredentialsGrant = async (req) => {
+    // The client credentials grant type MUST only be used by confidential clients.
+    //
+    // https://datatracker.ietf.org/doc/html/rfc6749#section-4.4
     const client = await handleClientAuthentication(req, ['client_secret_basic', 'client_secret_post']);
 
     if (req.body.scope) {

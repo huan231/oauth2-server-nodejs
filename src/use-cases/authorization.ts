@@ -98,6 +98,11 @@ export const makeHandleAuthorizationRequest = ({
       }
     }
 
+    // If multiple redirection URIs have been registered, [...] or if no redirection URI has
+    // been registered, the client MUST include a redirection URI with the
+    // authorization request using the "redirect_uri" request parameter.
+    //
+    // https://datatracker.ietf.org/doc/html/rfc6749#section-3.1.2.3
     const redirectUri = req.query.redirectUri ?? (redirectUris.length === 1 ? redirectUris[0] : undefined);
 
     if (!redirectUri) {
