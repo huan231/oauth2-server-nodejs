@@ -13,6 +13,7 @@ import {
   makeHandleClientCredentialsGrant,
   makeHandleRefreshTokenGrant,
 } from './grant-types';
+import { makeHandleAuthorizationServerMetadataRequest } from './authorization-server-metadata';
 
 export interface Storage extends AuthorizationCodeStorage, RefreshTokenStorage, ClientStorage {}
 
@@ -61,6 +62,7 @@ export const makeUseCases = ({
     handleClientCredentialsGrant,
     handleRefreshTokenGrant,
   });
+  const { handleAuthorizationServerMetadataRequest } = makeHandleAuthorizationServerMetadataRequest({ issuer, scopes });
 
-  return { handleAuthorizationRequest, handleAccessTokenRequest };
+  return { handleAuthorizationRequest, handleAccessTokenRequest, handleAuthorizationServerMetadataRequest };
 };
