@@ -1,7 +1,7 @@
 import { JsonWebKey } from 'crypto';
 
 import { AuthorizationCodeStorage, ClientStorage, RefreshTokenStorage } from '../models';
-import { makeJWT } from '../utils';
+import { exportJWK, makeJWT } from '../utils';
 import { makeAssertAccessTokenScope } from './access-token-scope';
 import { makeHandleClientAuthentication } from './client-authentication';
 import { makeHandleAuthorizationRequest } from './authorization';
@@ -14,6 +14,7 @@ import {
   makeHandleRefreshTokenGrant,
 } from './grant-types';
 import { makeHandleAuthorizationServerMetadataRequest } from './authorization-server-metadata';
+import { makeHandleJWKSRequest } from './jwks';
 
 export interface Storage extends AuthorizationCodeStorage, RefreshTokenStorage, ClientStorage {}
 
@@ -63,6 +64,12 @@ export const makeUseCases = ({
     handleRefreshTokenGrant,
   });
   const { handleAuthorizationServerMetadataRequest } = makeHandleAuthorizationServerMetadataRequest({ issuer, scopes });
+  const { handleJWKSRequest } = makeHandleJWKSRequest({ jwk, exportJWK });
 
-  return { handleAuthorizationRequest, handleAccessTokenRequest, handleAuthorizationServerMetadataRequest };
+  return {
+    handleAuthorizationRequest,
+    handleAccessTokenRequest,
+    handleAuthorizationServerMetadataRequest,
+    handleJWKSRequest,
+  };
 };

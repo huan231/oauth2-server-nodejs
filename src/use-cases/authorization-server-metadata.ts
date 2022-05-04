@@ -2,6 +2,7 @@ export interface AuthorizationServerMetadataResponse {
   issuer: string;
   authorizationEndpoint: string;
   tokenEndpoint: string;
+  jwksUri: string;
   scopesSupported?: string[];
   responseTypesSupported: string[];
   grantTypesSupported: string[];
@@ -18,11 +19,13 @@ export const makeHandleAuthorizationServerMetadataRequest = ({
 }) => {
   const authorizationEndpoint = new URL('/authorize', issuer);
   const tokenEndpoint = new URL('/token', issuer);
+  const jwksUri = new URL('/jwks.json', issuer);
 
   const authorizationServerMetadataResponse: AuthorizationServerMetadataResponse = {
     issuer,
     authorizationEndpoint: authorizationEndpoint.href,
     tokenEndpoint: tokenEndpoint.href,
+    jwksUri: jwksUri.href,
     // Claims with zero elements MUST be omitted from the response.
     //
     // https://datatracker.ietf.org/doc/html/rfc8414#section-3.2

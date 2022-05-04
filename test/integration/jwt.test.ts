@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+
 import t from 'tap';
 import request from 'supertest';
 

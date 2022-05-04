@@ -76,14 +76,19 @@ export const oAuth2ServerMiddleware = ({
 
   router.use(urlencoded({ extended: false }));
 
-  const { handleAuthorizationRequest, handleAccessTokenRequest, handleAuthorizationServerMetadataRequest } =
-    makeUseCases({ storage, issuer, jwk, scopes });
-  const { authorizationHandler, tokenHandler, authorizationServerMetadataHandler } = makeHandlers({
+  const {
+    handleAuthorizationRequest,
+    handleAccessTokenRequest,
+    handleAuthorizationServerMetadataRequest,
+    handleJWKSRequest,
+  } = makeUseCases({ storage, issuer, jwk, scopes });
+  const { authorizationHandler, tokenHandler, authorizationServerMetadataHandler, jwksHandler } = makeHandlers({
     handleAuthorizationRequest,
     handleAccessTokenRequest,
     makeHandleAuthentication: authenticate,
     makeHandleIsAuthorized: authorize,
     handleAuthorizationServerMetadataRequest,
+    handleJWKSRequest,
   });
   const { errorHandler } = makeErrorHandler({ issuer });
 
@@ -94,6 +99,9 @@ export const oAuth2ServerMiddleware = ({
 
   router.options('/.well-known/oauth-authorization-server', corsMiddleware(), corsPreflightMiddleware(['GET']));
   router.get('/.well-known/oauth-authorization-server', corsMiddleware(), authorizationServerMetadataHandler);
+
+  router.options('/jwks.json', corsMiddleware(), corsPreflightMiddleware(['GET']));
+  router.get('/jwks.json', corsMiddleware(), jwksHandler);
 
   router.use(errorHandler);
 
