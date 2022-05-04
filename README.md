@@ -76,6 +76,7 @@ at [oauth2-server-nodejs.herokuapp.com](https://oauth2-server-nodejs.herokuapp.c
 
 - [RFC6749 - The OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749)
 - [RFC6750 - The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://datatracker.ietf.org/doc/html/rfc6750)
+- [RFC8414 - OAuth 2.0 Authorization Server Metadata](https://datatracker.ietf.org/doc/html/rfc8414)
 
 ## License
 
