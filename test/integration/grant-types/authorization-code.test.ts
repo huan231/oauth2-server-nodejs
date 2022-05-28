@@ -97,7 +97,7 @@ t.test('oauth 2.0 authorization code grant', (t) => {
 
     const url = new URL(res.headers['location']);
 
-    t.type(url.searchParams.get('state'), state);
+    t.equal(url.searchParams.get('state'), state);
   });
 
   t.test('issues an access token with requested scopes', async (t) => {
@@ -131,6 +131,6 @@ t.test('oauth 2.0 authorization code grant', (t) => {
       .send({ grant_type: 'authorization_code', code, redirect_uri: redirectUri, client_id: clientId });
 
     t.equal(res.statusCode, 200);
-    t.type(res.body.scope, scope);
+    t.equal(res.body.scope, scope);
   });
 });
