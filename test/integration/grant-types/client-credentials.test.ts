@@ -75,7 +75,7 @@ t.test('oauth 2.0 client credentials grant', (t) => {
       .send({ grant_type: 'client_credentials', scope });
 
     t.equal(res.statusCode, 200);
-    t.type(res.body.scope, scope);
+    t.equal(res.body.scope, scope);
   });
 
   t.test('the requested scope exceeds the supported set of scopes', async (t) => {
